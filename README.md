@@ -32,15 +32,8 @@ Before you start, make sure you have:
 
 ---
 
-### Step 1 — Install the Extension
+### Step 1 — Build & Install the Extension Locally
 
-**Option A — From the Marketplace (recommended)**
-1. Open VS Code.
-2. Press `Ctrl+Shift+X` (Windows/Linux) or `Cmd+Shift+X` (Mac) to open the Extensions panel.
-3. Search for **QA-Bots**.
-4. Click **Install**.
-
-**Option B — From a `.vsix` file (manual / local build)**
 1. Clone this repository:
    ```bash
    git clone https://github.com/mredzmi/robotbdd.git
