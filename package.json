@@ -1,0 +1,139 @@
+{
+  "name": "qa-bots",
+  "displayName": "QA-Bots",
+  "description": "AI-powered QA slash commands for Claude Code — sanity, regression, automate, debug, and PR review bots.",
+  "version": "0.1.0",
+  "publisher": "mredzmi",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Testing",
+    "AI",
+    "Other"
+  ],
+  "keywords": [
+    "qa",
+    "testing",
+    "claude",
+    "claude-code",
+    "ai",
+    "bdd",
+    "automation",
+    "regression",
+    "debug"
+  ],
+  "icon": "images/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mredzmi/robotbdd"
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "qa-bots.install",
+        "title": "QA-Bots: Install Claude Code Commands",
+        "category": "QA-Bots"
+      },
+      {
+        "command": "qa-bots.sanity",
+        "title": "QA-Bots: Run Sanity Check",
+        "category": "QA-Bots"
+      },
+      {
+        "command": "qa-bots.regression",
+        "title": "QA-Bots: Run Regression Analysis",
+        "category": "QA-Bots"
+      },
+      {
+        "command": "qa-bots.automate",
+        "title": "QA-Bots: Generate Automated Tests",
+        "category": "QA-Bots"
+      },
+      {
+        "command": "qa-bots.debug",
+        "title": "QA-Bots: Debug Errors & Failing Tests",
+        "category": "QA-Bots"
+      },
+      {
+        "command": "qa-bots.reviewPR",
+        "title": "QA-Bots: Review Pull Request",
+        "category": "QA-Bots"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "qa-bots.automate",
+          "when": "resourceExtname =~ /\\.(ts|js|py|java|go|rb|cs)$/",
+          "group": "qa-bots"
+        },
+        {
+          "command": "qa-bots.debug",
+          "when": "resourceExtname =~ /\\.(ts|js|py|java|go|rb|cs)$/",
+          "group": "qa-bots"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "qa-bots.sanity",
+          "group": "qa-bots@1"
+        },
+        {
+          "command": "qa-bots.automate",
+          "when": "resourceExtname =~ /\\.(ts|js|py|java|go|rb|cs)$/",
+          "group": "qa-bots@2"
+        },
+        {
+          "command": "qa-bots.debug",
+          "when": "resourceExtname =~ /\\.(ts|js|py|java|go|rb|cs)$/",
+          "group": "qa-bots@3"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "QA-Bots",
+      "properties": {
+        "qa-bots.autoInstallOnActivation": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically install Claude Code commands into the workspace when the extension activates."
+        },
+        "qa-bots.testFramework": {
+          "type": "string",
+          "enum": ["auto", "jest", "vitest", "pytest", "robot", "mocha", "jasmine", "junit"],
+          "default": "auto",
+          "description": "Preferred test framework for /QA-automate. 'auto' detects from your project."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "webpack",
+    "watch": "webpack --watch",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@types/node": "20.x",
+    "@typescript-eslint/eslint-plugin": "^8.3.0",
+    "@typescript-eslint/parser": "^8.3.0",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.0",
+    "eslint": "^9.9.1",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.5.4",
+    "webpack": "^5.94.0",
+    "webpack-cli": "^5.1.4"
+  }
+}
