@@ -1,22 +1,24 @@
 {
   "name": "qa-bots",
   "displayName": "QA-Bots",
-  "description": "AI-powered QA slash commands for Claude Code — sanity, regression, automate, debug, and PR review bots.",
-  "version": "0.1.0",
+  "description": "AI-powered QA slash commands — works with any AI: GitHub Copilot, OpenAI, Claude, and more.",
+  "version": "0.2.0",
   "publisher": "mredzmi",
   "engines": {
-    "vscode": "^1.85.0"
+    "vscode": "^1.90.0"
   },
   "categories": [
     "Testing",
     "AI",
+    "Chat",
     "Other"
   ],
   "keywords": [
     "qa",
     "testing",
     "claude",
-    "claude-code",
+    "copilot",
+    "openai",
     "ai",
     "bdd",
     "automation",
@@ -33,6 +35,37 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "chatParticipants": [
+      {
+        "id": "qa-bots.assistant",
+        "name": "qa-bots",
+        "fullName": "QA-Bots Assistant",
+        "description": "AI-powered QA assistant — sanity, regression, test generation, debug, and PR review.",
+        "isSticky": false,
+        "commands": [
+          {
+            "name": "sanity",
+            "description": "Run a sanity check on the current workspace"
+          },
+          {
+            "name": "regression",
+            "description": "Analyse recent git changes for regression risk"
+          },
+          {
+            "name": "automate",
+            "description": "Generate automated tests for the active file"
+          },
+          {
+            "name": "debug",
+            "description": "Debug an error or failing test — paste the stack trace"
+          },
+          {
+            "name": "reviewPR",
+            "description": "Review the current branch diff as a pull request"
+          }
+        ]
+      }
+    ],
     "commands": [
       {
         "command": "qa-bots.install",
@@ -66,46 +99,75 @@
       }
     ],
     "menus": {
-      "explorer/context": [
+      "editor/context": [
         {
           "command": "qa-bots.automate",
           "when": "resourceExtname =~ /\\.(ts|js|py|java|go|rb|cs)$/",
-          "group": "qa-bots"
-        },
-        {
-          "command": "qa-bots.debug",
-          "when": "resourceExtname =~ /\\.(ts|js|py|java|go|rb|cs)$/",
-          "group": "qa-bots"
-        }
-      ],
-      "editor/context": [
-        {
-          "command": "qa-bots.sanity",
           "group": "qa-bots@1"
         },
         {
-          "command": "qa-bots.automate",
-          "when": "resourceExtname =~ /\\.(ts|js|py|java|go|rb|cs)$/",
-          "group": "qa-bots@2"
-        },
-        {
           "command": "qa-bots.debug",
           "when": "resourceExtname =~ /\\.(ts|js|py|java|go|rb|cs)$/",
-          "group": "qa-bots@3"
+          "group": "qa-bots@2"
         }
       ]
     },
     "configuration": {
       "title": "QA-Bots",
       "properties": {
+        "qa-bots.aiBackend": {
+          "type": "string",
+          "enum": [
+            "vscode-lm",
+            "openai",
+            "claude-code"
+          ],
+          "enumDescriptions": [
+            "Use any AI available in VS Code (GitHub Copilot, Claude, Gemini, etc.) — recommended",
+            "Call the OpenAI API directly using your own API key",
+            "Use the Claude Code CLI — installs .md files into .claude/commands/"
+          ],
+          "default": "vscode-lm",
+          "description": "Which AI backend to use for QA-Bot commands."
+        },
+        "qa-bots.vscodeLmFamily": {
+          "type": "string",
+          "default": "",
+          "description": "Preferred VS Code language model family (e.g. 'gpt-4o', 'claude-sonnet', 'gemini-pro'). Leave blank to let VS Code pick the best available model."
+        },
+        "qa-bots.openaiApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "OpenAI API key. Required only when qa-bots.aiBackend is 'openai'."
+        },
+        "qa-bots.openaiModel": {
+          "type": "string",
+          "enum": [
+            "gpt-4o",
+            "gpt-4o-mini",
+            "gpt-4-turbo",
+            "gpt-3.5-turbo"
+          ],
+          "default": "gpt-4o",
+          "description": "OpenAI model to use when backend is 'openai'."
+        },
         "qa-bots.autoInstallOnActivation": {
           "type": "boolean",
           "default": true,
-          "description": "Automatically install Claude Code commands into the workspace when the extension activates."
+          "description": "Auto-install Claude Code command files into the workspace on startup (only relevant when backend is 'claude-code')."
         },
         "qa-bots.testFramework": {
           "type": "string",
-          "enum": ["auto", "jest", "vitest", "pytest", "robot", "mocha", "jasmine", "junit"],
+          "enum": [
+            "auto",
+            "jest",
+            "vitest",
+            "pytest",
+            "robot",
+            "mocha",
+            "jasmine",
+            "junit"
+          ],
           "default": "auto",
           "description": "Preferred test framework for /QA-automate. 'auto' detects from your project."
         }
@@ -118,13 +180,10 @@
     "watch": "webpack --watch",
     "package": "webpack --mode production --devtool hidden-source-map",
     "compile-tests": "tsc -p . --outDir out",
-    "watch-tests": "tsc -p . -w --outDir out",
-    "pretest": "npm run compile-tests && npm run compile && npm run lint",
-    "lint": "eslint src",
-    "test": "vscode-test"
+    "lint": "eslint src"
   },
   "devDependencies": {
-    "@types/vscode": "^1.85.0",
+    "@types/vscode": "^1.90.0",
     "@types/node": "20.x",
     "@typescript-eslint/eslint-plugin": "^8.3.0",
     "@typescript-eslint/parser": "^8.3.0",
